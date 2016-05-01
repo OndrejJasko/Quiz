@@ -232,6 +232,33 @@ public class QuizFrame extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+		
+		boolean correct = false;
+		
+		if(rba1.isSelected() && questions.get(0).getAnswers().get(0).isCorrect()){
+			correct = true;
+		} else if(rba2.isSelected() && questions.get(0).getAnswers().get(1).isCorrect()){
+			correct = true;
+		} else if(rba3.isSelected() && questions.get(0).getAnswers().get(2).isCorrect()){
+			correct = true;
+		} else if(rba4.isSelected() && questions.get(0).getAnswers().get(3).isCorrect()){
+			correct = true;
+		}
+		
+		if(correct){
+			student.increaseResult();
+			nextQuestion();
+		} else{
+			JOptionPane.showMessageDialog(
+					null,
+					"ERROR occured\n"
+					+ "It seems that correct answer was not found\n"
+					+ "Saving current result...\n"
+					+ "Please contact you professor!\n",
+					"ERROR",
+					JOptionPane.ERROR_MESSAGE);
+			
+			Controller.updateResultOfStudentToDB(student);
+		}
 	}
 }
