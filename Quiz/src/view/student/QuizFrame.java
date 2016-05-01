@@ -23,8 +23,8 @@ import domain.Student;
  */
 public class QuizFrame extends JFrame implements ActionListener{
 	
-	private static final int DEFAULT_WIDTH = 700;
-	private static final int DEFAULT_HEIGHT = 350;
+	private static final int DEFAULT_WIDTH = 1000;
+	private static final int DEFAULT_HEIGHT = 600;
 	
 	private static QuizFrame instance;
 	
@@ -106,7 +106,7 @@ public class QuizFrame extends JFrame implements ActionListener{
 		/*
 		 * Adjusting labels
 		 */
-		labelScore = new JLabel(student.getFirstName() + "'s score: ");
+		labelScore = new JLabel(student.getFirstName().toUpperCase() + "'s score: ");
 		Font fontScore = new Font("Verdana", Font.BOLD, 12);
 		labelScore.setFont(fontScore);
 		
@@ -151,7 +151,7 @@ public class QuizFrame extends JFrame implements ActionListener{
 		buttonConfirm = new JButton("Confirm answer");
 		buttonConfirm.addActionListener(this);
 		
-		rba1 = new JRadioButton(questions.get(0).getAnswers().get(0).getAnswerText());
+		rba1 = new JRadioButton("<html>" + questions.get(0).getAnswers().get(0).getAnswerText()+ "</html>");
 		rba1.setHorizontalTextPosition(SwingConstants.LEFT);
 		rba2 = new JRadioButton(questions.get(0).getAnswers().get(1).getAnswerText());
 		// rba2.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -208,7 +208,7 @@ public class QuizFrame extends JFrame implements ActionListener{
 			rba3.setText(questions.get(0).getAnswers().get(2).getAnswerText());
 			rba4.setText(questions.get(0).getAnswers().get(3).getAnswerText());
 			
-			labelScore.setText(student.getFirstName() + "'s score: " + student.getResult());
+			labelScore.setText(student.getFirstName().toUpperCase() + "'s score: " + student.getResult());
 		}
 		else{
 			Controller.updateResultOfStudentToDB(student);
@@ -227,38 +227,42 @@ public class QuizFrame extends JFrame implements ActionListener{
 		rba2.setEnabled(false);
 		rba3.setEnabled(false);
 		rba4.setEnabled(false);
+		labelScore.setText(student.getFirstName().toUpperCase() + "'s score: " + student.getResult());
 		labelQuestionContent.setText("The End...");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		Object source = arg0.getSource();
 		
-		boolean correct = false;
-		
-		if(rba1.isSelected() && questions.get(0).getAnswers().get(0).isCorrect()){
-			correct = true;
-		} else if(rba2.isSelected() && questions.get(0).getAnswers().get(1).isCorrect()){
-			correct = true;
-		} else if(rba3.isSelected() && questions.get(0).getAnswers().get(2).isCorrect()){
-			correct = true;
-		} else if(rba4.isSelected() && questions.get(0).getAnswers().get(3).isCorrect()){
-			correct = true;
+		if(source == buttonConfirm){
+			performAction();
 		}
+	}
+
+	private void performAction() {
+		
+		boolean correct = isCorrectlyAnswered();
 		
 		if(correct){
 			student.increaseResult();
 			nextQuestion();
 		} else{
-			JOptionPane.showMessageDialog(
-					null,
-					"ERROR occured\n"
-					+ "It seems that correct answer was not found\n"
-					+ "Saving current result...\n"
-					+ "Please contact you professor!\n",
-					"ERROR",
-					JOptionPane.ERROR_MESSAGE);
-			
-			Controller.updateResultOfStudentToDB(student);
+			student.decreaseResult();
+			nextQuestion();
 		}
+	}
+
+	private boolean isCorrectlyAnswered() {
+		if(rba1.isSelected() && questions.get(0).getAnswers().get(0).isCorrect()){
+			return true;
+		} else if(rba2.isSelected() && questions.get(0).getAnswers().get(1).isCorrect()){
+			return true;
+		} else if(rba3.isSelected() && questions.get(0).getAnswers().get(2).isCorrect()){
+			return true;
+		} else if(rba4.isSelected() && questions.get(0).getAnswers().get(3).isCorrect()){
+			return true;
+		}
+		return false;
 	}
 }

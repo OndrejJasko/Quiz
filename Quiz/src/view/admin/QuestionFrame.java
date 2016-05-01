@@ -58,6 +58,10 @@ public class QuestionFrame extends JFrame implements ActionListener {
 	private JRadioButton rb3;
 	private JRadioButton rb4;
 	
+	private JMenuBar menuBar;
+	private JMenu menuHelpREADME;
+	private JMenuItem itemReadMe;
+	
 	/*
 	 * public empty constructor
 	 */
@@ -66,6 +70,19 @@ public class QuestionFrame extends JFrame implements ActionListener {
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setLayout(new BorderLayout());
 		
+		/*
+		 * Adjusting menu bar
+		 */
+		menuBar = new JMenuBar();
+		menuHelpREADME = new JMenu("Help/Readme");
+		
+		itemReadMe = new JMenuItem("ReadMe");
+		itemReadMe.addActionListener(this);
+		
+		menuHelpREADME.add(itemReadMe);
+		menuBar.add(menuHelpREADME);
+		
+		setJMenuBar(menuBar);
 		/*
 		 * Defining panels
 		 */
@@ -225,21 +242,40 @@ public class QuestionFrame extends JFrame implements ActionListener {
 		
 		if(source == buttonClose){
 			disposeQuestionFrame();
+		} else if(source == buttonAdd){
+			saveQuestion();
+		} else if(source == itemReadMe){
+			showReadMeDialog();
 		}
+	}
+
+	/**
+	 * Message dilalog which informs Administrator about actions he can perform on current frame
+	 */
+	private void showReadMeDialog() {
+		JOptionPane.showMessageDialog(
+				null,
+			    "Add  - Creates new question, based on content of text areas and jradiobuttons\n"
+			    + "\tand adds newly created question to global list of questions.\n"
+			    + "Question panel - Add question text to textArea surrounded with border titled 'Question'\n"
+			    + "Answer panels - Add answer text to textAreas surrounded with border titled 'Answer #'\n"
+			    + "\tIf answer# is correct, select appropriate jradiobutton\n");
+	}
+
+	/**
+	 * Method that saves question to global list of questions
+	 */
+	private void saveQuestion() {
+		Answer a1 = getAnswer(taAnswer1, rb1);
+		Answer a2 = getAnswer(taAnswer2, rb2);
+		Answer a3 = getAnswer(taAnswer3, rb3);
+		Answer a4 = getAnswer(taAnswer4, rb4);
 		
-		else if(source == buttonAdd){
-			
-			Answer a1 = getAnswer(taAnswer1, rb1);
-			Answer a2 = getAnswer(taAnswer2, rb2);
-			Answer a3 = getAnswer(taAnswer3, rb3);
-			Answer a4 = getAnswer(taAnswer4, rb4);
-			
-			String questionText = textAreaQuestion.getText().trim();
-			
-			Controller.addNewQuestion(questionText, a1, a2, a3, a4);
-			
-			refreshFields();
-		}
+		String questionText = textAreaQuestion.getText().trim();
+		
+		Controller.addNewQuestion(questionText, a1, a2, a3, a4);
+		
+		refreshFields();
 	}
 
 	/**
@@ -272,6 +308,12 @@ public class QuestionFrame extends JFrame implements ActionListener {
 	 * Method which generates Answer
 	 * based on contents of the appropriate text area
 	 * and appropriate radio button
+	 * 
+	 * @param textArea, text area from which Answer text is read
+	 * 
+	 * @param rb, radio button representing whether Answer is correct or not
+	 * 
+	 *  @return Answer, returns answer based on content of the input parameters
 	 */
 	private Answer getAnswer(JTextArea textArea, JRadioButton rb) {
 		

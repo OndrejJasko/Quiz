@@ -53,7 +53,7 @@ public class MySQLConnection {
 		try{
 			connection = DriverManager.getConnection(url, user, password);
 						
-			String sql = "SELECT * FROM administrator"
+			String sql = "SELECT * FROM administrator "
 						+ "WHERE first_name = ? "
 						+ "AND last_name = ? "
 						+ "AND password = ?";
