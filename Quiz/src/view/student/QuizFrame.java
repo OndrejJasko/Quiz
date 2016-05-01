@@ -105,7 +105,7 @@ public class QuizFrame extends JFrame implements ActionListener{
 		tmp.addAll(Controller.getAllQuestions());
 		
 		int i = 0;
-		while(i++ < 5){
+		while(i++ < 10){
 			Random rand = new Random();
 			int index = rand.nextInt(tmp.size());
 			
