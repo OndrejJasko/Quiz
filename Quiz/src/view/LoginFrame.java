@@ -36,6 +36,7 @@ public class LoginFrame extends JFrame implements ActionListener{
 	private JMenuBar menuBar;
 	private JMenu menuHelp;
 	private JMenuItem menuItemAbout;
+	private JMenuItem menuItemReadMe;
 	
 	/**
 	 * An empty constructor of the class LoginFrame
@@ -48,7 +49,12 @@ public class LoginFrame extends JFrame implements ActionListener{
 		menuBar = new JMenuBar();
 		menuHelp = new JMenu("Help");
 		menuItemAbout = new JMenuItem("About");
+		menuItemReadMe = new JMenuItem("READ ME");
 		
+		menuItemAbout.addActionListener(this);
+		menuItemReadMe.addActionListener(this);
+		
+		menuHelp.add(menuItemReadMe);
 		menuHelp.add(menuItemAbout);
 		menuBar.add(menuHelp);
 		
@@ -96,9 +102,12 @@ public class LoginFrame extends JFrame implements ActionListener{
 		
 		if(source == buttonLogin){
 			Controller.loginIn(textFieldUsername.getText().trim(), passwordField.getPassword());
-			
 		} else if(source == buttonCancel){
 			disposeLoginFrame();
+		} else if(source == menuItemAbout){
+			Controller.showAboutDialog();
+		} else if(source == menuItemReadMe){
+			Controller.showLogInReadMeDialog();
 		}
 	}
 	

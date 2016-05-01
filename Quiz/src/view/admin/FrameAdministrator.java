@@ -33,6 +33,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 	private JMenuItem itemCheckResults;
 	private JMenuItem itemSaveStudents;
 	private JMenuItem itemSaveQuestions;
+	private JMenuItem itemAddNewAdmin;
 	private JMenuItem itemHelp;
 	
 	private JScrollPane scrollPane;
@@ -45,11 +46,13 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 	private JButton buttonCheckResults;
 	private JButton buttonSaveStudentsToDB;
 	private JButton buttonSaveQuestionsToDB;
+	private JButton buttonAddNewAdmin;
 	
 	private JPanel panelEast;
 	private JPanel panelCenter;
 	
 	public FrameAdministrator(String firstName){
+		
 		setTitle("Hello " + firstName + "! Choose what you are going to do next :)");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setLayout(new BorderLayout());
@@ -66,6 +69,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		itemCheckResults = new JMenuItem("Check results");
 		itemSaveStudents = new JMenuItem("Save students");
 		itemSaveQuestions = new JMenuItem("Save questions");
+		itemAddNewAdmin = new JMenuItem("Add administrator");
 		itemLogOut = new JMenuItem("LogOut/Exit");
 		itemHelp = new JMenuItem("READ ME");
 		
@@ -74,6 +78,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		itemCheckResults.addActionListener(this);
 		itemSaveStudents.addActionListener(this);
 		itemSaveQuestions.addActionListener(this);
+		itemAddNewAdmin.addActionListener(this);
 		itemLogOut.addActionListener(this);
 		itemHelp.addActionListener(this);
 		
@@ -82,6 +87,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		menuFile.add(itemCheckResults);
 		menuFile.add(itemSaveStudents);
 		menuFile.add(itemSaveQuestions);
+		menuFile.add(itemAddNewAdmin);
 		menuFile.add(itemLogOut);
 		
 		menuHelp.add(itemHelp);
@@ -94,7 +100,6 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		/*
 		 * Adjusting panel position in the center of the layout
 		 */
-		
 		Border border = BorderFactory.createEtchedBorder();
 		Border titled = BorderFactory.createTitledBorder(border, "Added students");
 		
@@ -121,6 +126,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		buttonCheckResults = new JButton("Check results");
 		buttonSaveStudentsToDB = new JButton("Save students");
 		buttonSaveQuestionsToDB = new JButton("Save questions");
+		buttonAddNewAdmin = new JButton("Add admin");
 		buttonLogOut = new JButton("LogOut/Cancel");
 		
 		buttonAddStudent.addActionListener(this);
@@ -128,6 +134,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		buttonCheckResults.addActionListener(this);
 		buttonSaveStudentsToDB.addActionListener(this);
 		buttonSaveQuestionsToDB.addActionListener(this);
+		buttonAddNewAdmin.addActionListener(this);
 		buttonLogOut.addActionListener(this);
 		
 		panelEast.add(buttonAddStudent);
@@ -135,6 +142,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		panelEast.add(buttonCheckResults);
 		panelEast.add(buttonSaveStudentsToDB);
 		panelEast.add(buttonSaveQuestionsToDB);
+		panelEast.add(buttonAddNewAdmin);
 		panelEast.add(buttonLogOut);
 		
 		add(panelCenter, BorderLayout.CENTER);
@@ -150,24 +158,20 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		Object source = e.getSource();
 		if(source == itemAddStudent || source == buttonAddStudent){
 			Controller.showAddNewStudentFrame();
-		}
-		else if(source == itemAddQuestion || source == buttonAddQuestion){
+		} else if(source == itemAddQuestion || source == buttonAddQuestion){
 			Controller.showAddNewQuestionFrame();
-		}
-		else if(source == itemCheckResults || source == buttonCheckResults){
+		} else if(source == itemCheckResults || source == buttonCheckResults){
 			Controller.showResultsFrame();
-		}
-		else if(source == itemLogOut || source == buttonLogOut){
+		} else if(source == itemLogOut || source == buttonLogOut){
 			disposeAdministratorFrame();
-		}
-		else if(source == itemSaveStudents || source == buttonSaveStudentsToDB){
+		} else if(source == itemSaveStudents || source == buttonSaveStudentsToDB){
 			Controller.saveStudentsToDB();
-		}
-		else if(source == itemSaveQuestions || source == buttonSaveQuestionsToDB){
+		} else if(source == itemSaveQuestions || source == buttonSaveQuestionsToDB){
 			Controller.saveQuestionsToDB();
-		}
-		else if(source == itemHelp){
+		} else if(source == itemHelp){
 			showReadMeDialog();
+		} else if(source == itemAddNewAdmin || source == buttonAddNewAdmin){
+			Controller.showAddNewAdministratorFrame();
 		}
 	}
 

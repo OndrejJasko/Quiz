@@ -1,29 +1,37 @@
 package view.admin;
 
-import java.awt.*;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import controller.Controller;
 
 /**
- * Class (Frame) which is used for adding new Student.
+ * Class(Frame) whose purpose is to collect data about new Administrator
  * 
- * @author Filip Stojkovic
  * @author Marko Stevankovic
+ * @author Filip Stojkovic
  * @author Martin Veres
  */
-public class FrameAddNewStudent extends JFrame implements ActionListener{
+public class FrameAddNewAdministrator extends JFrame implements ActionListener{
 	
 	public static final int DEFAULT_WIDTH = 300;
 	public static final int DEFAULT_HEIGHT = 250;
-	
-	private JPanel panelIndex;
-	private JPanel panelEnrollmentYear;
+
 	private JPanel panelFirstName;
 	private JPanel panelLastName;
+	private JPanel panelPassword;
 	private JPanel panelButtons;
 	
 	private JMenuBar menuBar;
@@ -33,20 +41,18 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 	private JButton buttonAdd;
 	private JButton buttonCancel;
 	
-	private JLabel labelIndex;
-	private JLabel labelEnrollmentYear;
 	private JLabel labelFirstName;
+	private JLabel labelPassword;
 	private JLabel labelLastName;
 	
-	private JTextField tfIndex;
-	private JTextField tfEnrollmentYear;
 	private JTextField tfFirstName;
+	private JTextField tfPassword;
 	private JTextField tfLastName;
 	
-	public FrameAddNewStudent(){
-		setTitle("Add new student...");
+	public FrameAddNewAdministrator(){
+		setTitle("Add new administrator...");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		setLayout(new GridLayout(5, 1));
+		setLayout(new GridLayout(4, 1));
 		
 		/*
 		 * Adjusting menu bar
@@ -63,25 +69,7 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 		setJMenuBar(menuBar);
 		
 		/*
-		 * Adjusting panel for retrieving index number 
-		 */
-		panelIndex = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		labelIndex = new JLabel("Index number: ");
-		tfIndex = new JTextField(4);
-		panelIndex.add(labelIndex);
-		panelIndex.add(tfIndex);
-		
-		/*
-		 * Adjusting panel for retrieving the year of enrollment at the Faculty
-		 */
-		panelEnrollmentYear = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		labelEnrollmentYear = new JLabel("Enrollment year: ");
-		tfEnrollmentYear = new JTextField(4);
-		panelEnrollmentYear.add(labelEnrollmentYear);
-		panelEnrollmentYear.add(tfEnrollmentYear);
-		
-		/*
-		 * Adjusting panel for retrieving information about user's first name
+		 * Adjusting panel for retrieving information about administrator's first name
 		 */
 		panelFirstName = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		labelFirstName = new JLabel("First name: ");
@@ -90,13 +78,22 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 		panelFirstName.add(tfFirstName);
 		
 		/*
-		 * Adjusting panel for retrieving information about user's last name
+		 * Adjusting panel for retrieving information about administrator's last name
 		 */
 		panelLastName = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		labelLastName = new JLabel("Last name: ");
 		tfLastName = new JTextField(15);
 		panelLastName.add(labelLastName);
 		panelLastName.add(tfLastName);
+
+		/*
+		 * Adjusting panel for retrieving Administrators password
+		 */
+		panelPassword = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		labelPassword = new JLabel("Password: ");
+		tfPassword = new JTextField(15);
+		panelPassword.add(labelPassword);
+		panelPassword.add(tfPassword);
 		
 		/*
 		 * Adjusting panel with 3 buttons
@@ -110,10 +107,9 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 		panelButtons.add(buttonAdd);
 		panelButtons.add(buttonCancel);
 		
-		add(panelIndex);
-		add(panelEnrollmentYear);
 		add(panelFirstName);
 		add(panelLastName);
+		add(panelPassword);
 		add(panelButtons);
 	}
 
@@ -127,12 +123,12 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 		Object source = e.getSource();
 		
 		if(source == buttonAdd){
-			Controller.addNewStudent(tfIndex.getText(), tfEnrollmentYear.getText(), tfFirstName.getText(), tfLastName.getText());
+			Controller.addNewAdministrator(tfFirstName.getText(), tfLastName.getText(), tfPassword.getText());
 			refreshFields();
 		}else if(source == buttonCancel){
-			disposeFrameAddNewStudent();
+			disposeFrameAddNewAdministrator();
 		}else if(source == itemHelp){
-			Controller.showAddNewStudentFrameHelpDialog();
+			Controller.showAddNewAdministratorFrameHelpDialog();
 		}
 	}
 
@@ -140,7 +136,7 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 	 * Confirm dialog which asks Administrator 
 	 * whether he is sure that he wants to dispose/quit this dialog
 	 */
-	private void disposeFrameAddNewStudent() {
+	private void disposeFrameAddNewAdministrator() {
 		int option = JOptionPane.showConfirmDialog(
 				null, 
 				"Close this window?", 
@@ -155,9 +151,8 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 	 * Method which removes content of all text filds in the frame
 	 */
 	private void refreshFields() {
-		tfIndex.setText(null);
-		tfEnrollmentYear.setText(null);
 		tfFirstName.setText(null);
+		tfPassword.setText(null);
 		tfLastName.setText(null);
 	}
 }

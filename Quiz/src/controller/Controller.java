@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.mysql.jdbc.integration.c3p0.MysqlConnectionTester;
+
 import database_connection.MySQLConnection;
 import domain.Administrator;
 import domain.Answer;
@@ -14,6 +16,7 @@ import domain.Question;
 import domain.Student;
 import model.CollectionOfQuestions;
 import model.CollectionOfStudents;
+import view.admin.FrameAddNewAdministrator;
 import view.admin.FrameAddNewStudent;
 import view.admin.FrameAdministrator;
 import view.admin.FrameCheckResults;
@@ -38,9 +41,23 @@ public class Controller {
 	public static void loginIn(String username, char[] pass){
 		MySQLConnection dao = new MySQLConnection();
 		
-		String[] tmp = username.split("\\.");
-		String lastName = tmp[0];
-		String firstName = tmp[1];
+		String[] tmp = null;
+		String lastName = "";
+		String firstName = "";
+		
+		try{
+			tmp = username.split("\\.");
+			lastName = tmp[0];
+			firstName = tmp[1];
+		} catch(Exception exc){
+			JOptionPane.showMessageDialog(
+					null, 
+					"Username is INCORRECT!\n"
+					+ "For admin: lastName.firstName \n"
+					+ "For students: lastName.firstName.index\n",
+					"ERROR",
+					JOptionPane.ERROR_MESSAGE);
+		}
 		
 		String password = new String(pass);
 		String index = "";
@@ -57,17 +74,41 @@ public class Controller {
 		}
 		
 		if(index == null){
-			Administrator administrator = new Administrator(firstName, lastName, password);
-			if(dao.isAdmin(administrator)){
-				Controller.showAdministratorFrame(administrator.getFirstName());
+			try{
+				Administrator administrator = new Administrator(firstName, lastName, password);
+				if(dao.isAdmin(administrator)){
+					Controller.showAdministratorFrame(administrator.getFirstName());
+				}else{
+					errorInSigningIn();
+				}
+			} catch(Exception exc){
+				Controller.showExceptionErrorPane(exc);
 			}
 		}
 		else{
-			Student student = new Student(indexNumber, enrollmentYear, firstName, lastName, password, 0 );
-			if(dao.isStudent(student)){
-				Controller.showQuizFrame(student);
+			try{
+				Student student = new Student(indexNumber, enrollmentYear, firstName, lastName, password, 0 );
+				if(dao.isStudent(student)){
+					Controller.showQuizFrame(student);
+				}else{
+					errorInSigningIn();
+				}
+			} catch(Exception exc){
+				Controller.showExceptionErrorPane(exc);
 			}
 		}
+	}
+
+	/**
+	 * If user has not entered required information properly, error dialog shows.
+	 * Or if user does not exist in database.
+	 */
+	private static void errorInSigningIn() {
+		JOptionPane.showMessageDialog(
+				null,
+				"User NOT found.\nTry again!\nCheck your spelling\n",
+				"ERROR",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -328,5 +369,76 @@ public class Controller {
 		MySQLConnection dao = new MySQLConnection();
 		
 		dao.updateResultOfStudentToDB(student);
+	}
+
+	/**
+	 * Dialog showing informations about authors
+	 */
+	public static void showAboutDialog() {
+		JOptionPane.showMessageDialog(
+				null,
+				"Authors:\nFilip Stojkovic\nMartin Veres\nMarko Stevankovic\n",
+				"Authors info",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	 * Dialog showing basic information about logging in
+	 */
+	public static void showLogInReadMeDialog() {
+		JOptionPane.showMessageDialog(
+				null,
+				"Authors:\nusername: authorFirstName.authorLastName\n"
+				+ "password is their own password.\nIf you want to test authors account\n"
+				+ "username: admin.admin\npassword: 1234\n\n"
+				+ "Students:\nusername: lastName.firstName.index\n"
+				+ "password: index_JAVA\nIf you want to test students account\n"
+				+ "username: stevankovic.marko.2014/8\npassword: 2014/8_JAVA",
+				"Authors info",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	 * Method for displaying help dialog,
+	 * which informs Administrator how to add new Administrator
+	 */
+	public static void showAddNewAdministratorFrameHelpDialog() {
+			JOptionPane.showMessageDialog(
+					null,
+					"When all text fields are populated with appropriate data, "
+					+ "new Administrator will be created and after pressing button Add,"
+					+ "inserted into database.",
+					"Info",
+					JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	/**
+	 * Method which adds new Administrator to database.
+	 * 
+	 * @param firstName, representing first name of the Administrator
+	 * @param lastName, representing the last name of the Administrator
+	 * @param password, representing password of the Administrator
+ 	 */
+	public static void addNewAdministrator(String firstName, String lastName, String password) {
+		MySQLConnection dao = new MySQLConnection();
+		Administrator administrator = null;
+		
+		try{
+			administrator = new Administrator(firstName, lastName, password);
+			dao.saveAdministratorToDatabase(administrator);
+		}catch(Exception exc){
+			Controller.showExceptionErrorPane(exc);
+		}
+	}
+
+	/**
+	 * Displaying AddNewAdministratorFrame,
+	 * frame from which Administrator can create new Administrator
+	 */
+	public static void showAddNewAdministratorFrame() {
+		FrameAddNewAdministrator newAdminFrame = new FrameAddNewAdministrator();
+		newAdminFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		newAdminFrame.setVisible(true);
+		newAdminFrame.setLocationRelativeTo(null);
 	}
 }

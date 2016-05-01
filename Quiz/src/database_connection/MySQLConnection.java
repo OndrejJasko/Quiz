@@ -511,4 +511,55 @@ public class MySQLConnection {
 			}
 		}
 	}
+	
+	/**
+	 * Method which adds new Administrator to database
+	 * 
+	 * @param administrator, administrator that is going to be added to database
+	 * 
+	 * @throws Exception, when Driver is not properly loaded
+	 * 
+	 * @throws SQLException, an exception that provides information
+	 * 						 on a database access error or other errors.
+	 */
+	public void saveAdministratorToDatabase(Administrator administrator){
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch(Exception exc){
+			Controller.showExceptionErrorPane(exc);
+		}
+		
+		try{
+			connection = DriverManager.getConnection(url, user, password);
+			String sql = "INSERT into administrator VALUES(null, ?, ?, ?)";
+			preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+						
+			preparedStatement.setString(1, administrator.getFirstName());
+			preparedStatement.setString(2, administrator.getLastName());
+			preparedStatement.setString(3, administrator.getPassword());
+				
+			preparedStatement.executeUpdate();
+			
+			JOptionPane.showMessageDialog(null, "Administrator sucessfully saved to Database!");
+			
+		}catch(SQLException exc){
+			Controller.showSQLExceptionErrorPane(exc);
+		}finally{
+			if(preparedStatement != null){
+				try {
+					preparedStatement.close();
+				} catch (SQLException exc) {
+					Controller.showSQLExceptionErrorPane(exc);
+				}
+			}
+			
+			if(connection != null){
+				try {
+					connection.close();
+				} catch (SQLException exc) {
+					Controller.showSQLExceptionErrorPane(exc);
+				}
+			}
+		}
+	}
 }
