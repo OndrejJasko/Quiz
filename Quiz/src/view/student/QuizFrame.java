@@ -23,8 +23,8 @@ import domain.Student;
  */
 public class QuizFrame extends JFrame implements ActionListener{
 	
-	private static final int DEFAULT_WIDTH = 1000;
-	private static final int DEFAULT_HEIGHT = 600;
+	private static final int DEFAULT_WIDTH = 800;
+	private static final int DEFAULT_HEIGHT = 300;
 	
 	private static QuizFrame instance;
 	
@@ -56,9 +56,16 @@ public class QuizFrame extends JFrame implements ActionListener{
 	private JRadioButton rba3;
 	private JRadioButton rba4;
 	
+	/**
+	 * Method returning instance of QuizFrame class.
+	 * Idea from singleton pattern.
+	 * 
+	 * @param student, user who has logged in, in order to take an exam
+	 * @return QuizFrame instance
+	 */
 	public static QuizFrame getInstance(Student student){
 		if(instance == null){
-			Controller.loadQuestionsFromDB(); //Only when QuizFrame is created for the first time, questions are loaded from Database.
+			Controller.loadQuestionsFromDB();
 			instance = new QuizFrame(student);
 			instance.initialize();
 		}
@@ -66,6 +73,12 @@ public class QuizFrame extends JFrame implements ActionListener{
 		return instance;
 	}
 
+	/**
+	 * private constructor which takes one student as an input parameter
+	 * and sets Title and Size properties.
+	 * 
+	 * @param student, student who is taking exam, playing quiz
+	 */
 	private QuizFrame(Student student){
 		setTitle("RED STAR BELGRADE!!!");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -77,6 +90,11 @@ public class QuizFrame extends JFrame implements ActionListener{
 		initializuGUI();
 	}
 	
+	/**
+	 * Initializing questions into local list tmp.
+	 * Five questions are choosen randomly.
+	 * Student than answers to those 5 questions.
+	 */
 	private void initializeQuestions() {
 		questions = new ArrayList<>();
 		List<Question> tmp = new ArrayList<>();
@@ -98,6 +116,9 @@ public class QuizFrame extends JFrame implements ActionListener{
 		tmp.clear();
 	}
 	
+	/**
+	 * instance resets to its default.
+	 */
 	public void restart(){
 		instance = null;
 	}
@@ -194,10 +215,15 @@ public class QuizFrame extends JFrame implements ActionListener{
 		panel.add(panelCenter, BorderLayout.CENTER);
 		
 		add(panel);
-		setResizable(false);
+		// setResizable(false);
 		pack();
 	}
 	
+	/**
+	 * If students has answered to a question, application moves on to the next question.
+	 * If there are any questions left, student continues to answer.
+	 * If there are no questions left, student cannot use this application any more.
+	 */
 	public void nextQuestion(){
 		if(questions.size() > 1){
 			questions.remove(0);
@@ -221,6 +247,10 @@ public class QuizFrame extends JFrame implements ActionListener{
 		}
 	}
 
+	/**
+	 * If student has answered to all questions (5 questions),
+	 * he cannot use this application any more.
+	 */
 	private void endOfExam() {
 		buttonConfirm.setEnabled(false);
 		rba1.setEnabled(false);
@@ -231,6 +261,10 @@ public class QuizFrame extends JFrame implements ActionListener{
 		labelQuestionContent.setText("The End...");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		Object source = arg0.getSource();
@@ -240,6 +274,13 @@ public class QuizFrame extends JFrame implements ActionListener{
 		}
 	}
 
+	/**
+	 * After selecting answer student presses button.
+	 * If selected answer is correct, 
+	 * student's result is increased and application moves on to next question.
+	 * If selected answer is incorrect,
+	 * student's result is decreased and app moves on to next question
+	 */
 	private void performAction() {
 		
 		boolean correct = isCorrectlyAnswered();
@@ -253,6 +294,11 @@ public class QuizFrame extends JFrame implements ActionListener{
 		}
 	}
 
+	/**
+	 * Method checking whether selected answer is correnct or not
+	 * 
+	 * @return boolean, returns true if answer is correct and false if it is not
+	 */
 	private boolean isCorrectlyAnswered() {
 		if(rba1.isSelected() && questions.get(0).getAnswers().get(0).isCorrect()){
 			return true;
