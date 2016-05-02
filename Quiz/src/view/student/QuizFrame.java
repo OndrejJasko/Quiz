@@ -6,6 +6,8 @@ import java.util.Random;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -21,14 +23,14 @@ import domain.Student;
  * @author Filip Stojkovic
  * @author Martin Veres
  */
-public class QuizFrame extends JFrame implements ActionListener{
+public class QuizFrame extends JFrame implements ActionListener, WindowListener {
 	
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 300;
 	
 	private static QuizFrame instance;
 	
-	private List<Question> questions;
+	private List<Question> questions = new ArrayList<>();
 	
 	private Student student;
 	
@@ -69,12 +71,11 @@ public class QuizFrame extends JFrame implements ActionListener{
 			instance = new QuizFrame();
 			instance.initialize();
 		}
-		
 		return instance;
 	}
 
 	/**
-	 * private constructor which takes one student as an input parameter
+	 * Private constructor which takes one student as an input parameter
 	 * and sets Title and Size properties.
 	 * 
 	 * @param student, student who is taking exam, playing quiz
@@ -86,34 +87,8 @@ public class QuizFrame extends JFrame implements ActionListener{
 	}
 	
 	private void initialize() {
-		initializeQuestions();
+		Controller.initializeQuestions();
 		initializuGUI();
-	}
-	
-	/**
-	 * Initializing questions into local list tmp.
-	 * Five questions are choosen randomly.
-	 * Student than answers to those 5 questions.
-	 */
-	private void initializeQuestions() {
-		questions = new ArrayList<>();
-		List<Question> tmp = new ArrayList<>();
-		
-		questions.clear();
-		tmp.clear();
-		
-		tmp.addAll(Controller.getAllQuestions());
-		
-		int i = 0;
-		while(i++ < 10){
-			Random rand = new Random();
-			int index = rand.nextInt(tmp.size());
-			
-			questions.add(tmp.get(index));
-			
-			tmp.remove(index);
-		}
-		tmp.clear();
 	}
 	
 	/**
@@ -123,6 +98,9 @@ public class QuizFrame extends JFrame implements ActionListener{
 		instance = null;
 	}
 	
+	/**
+	 * Private method initializing GUI components
+	 */
 	private void initializuGUI() {
 		/*
 		 * Adjusting labels
@@ -302,5 +280,40 @@ public class QuizFrame extends JFrame implements ActionListener{
 	 */
 	public List<Question> getQuestions() {
 		return questions;
+	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+	}
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+		JOptionPane.showMessageDialog(null, 
+				"Finishing exam", 
+				"Info", 
+				JOptionPane.INFORMATION_MESSAGE);
+		QuizFrame.getInstance().restart();
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
 	}
 }

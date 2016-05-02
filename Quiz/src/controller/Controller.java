@@ -1,8 +1,10 @@
 package controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -664,6 +666,8 @@ public class Controller {
 			instance.getRba3().setText(instance.getQuestions().get(0).getAnswers().get(2).getAnswerText());
 			instance.getRba4().setText(instance.getQuestions().get(0).getAnswers().get(3).getAnswerText());
 			
+			instance.getRba1().setSelected(true);
+			
 			instance.getLabelScore().setText(getActiveStudent().getFirstName().toUpperCase() + "'s score: " + getActiveStudent().getResult());
 		}
 		else{
@@ -692,6 +696,8 @@ public class Controller {
 		instance.getLabelScore().setText(getActiveStudent().getFirstName().toUpperCase() + "'s score: " + getActiveStudent().getResult());
 		instance.getLabelQuestionContent().setText("The End...");
 		instance.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		instance.restart();
 	}
 	
 	/**
@@ -711,5 +717,34 @@ public class Controller {
 			getActiveStudent().decreaseResult();
 			Controller.getNextQuestion();
 		}
+	}
+	
+	/**
+	 * Initializing questions into local list tmp.
+	 * Ten questions are choosen randomly.
+	 * Student than answers to those 10 questions.
+	 */
+	public static void initializeQuestions() {
+		QuizFrame instance = QuizFrame.getInstance();
+		
+		List<Question> tmp = new ArrayList<>();
+		
+		instance.getQuestions().clear();
+		tmp.clear();
+		
+		tmp.addAll(Controller.getAllQuestions());
+		
+		int i = 0;
+		while(i < 10){
+			Random rand = new Random();
+			int index = rand.nextInt(tmp.size());
+			
+			instance.getQuestions().add(tmp.get(index));
+			
+			tmp.remove(index);
+			
+			i++;
+		}
+		tmp.clear();
 	}
 }
