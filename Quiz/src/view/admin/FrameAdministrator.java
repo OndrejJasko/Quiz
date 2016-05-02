@@ -60,6 +60,7 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		setTitle("Hello " + firstName + "! Choose what you are going to do next :)");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setLayout(new BorderLayout());
+		setResizable(false);
 		
 		/*
 		 * Adjusting menu bar
@@ -180,14 +181,12 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 			Controller.showResultsFrame();
 		} else if(source == itemLogOut || source == buttonLogOut){
 			Controller.disposeAdministratorFrame(this);
-			//disposeAdministratorFrame();
 		} else if(source == itemSaveStudents || source == buttonSaveStudentsToDB){
 			Controller.saveStudentsToDB();
 		} else if(source == itemSaveQuestions || source == buttonSaveQuestionsToDB){
 			Controller.saveQuestionsToDB();
 		} else if(source == itemHelp){
 			Controller.showReadMeDialogFrameAdministrator();
-			// showReadMeDialog();
 		} else if(source == itemAddNewAdmin || source == buttonAddNewAdmin){
 			Controller.showAddNewAdministratorFrame();
 		}
