@@ -259,6 +259,7 @@ public class QuizFrame extends JFrame implements ActionListener{
 		rba4.setEnabled(false);
 		labelScore.setText(student.getFirstName().toUpperCase() + "'s score: " + student.getResult());
 		labelQuestionContent.setText("The End...");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	/*

@@ -131,7 +131,7 @@ public class Controller {
 	 */
 	private static void showQuizFrame(Student student) {
 		QuizFrame quizFrame = QuizFrame.getInstance(student);
-		quizFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		quizFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		quizFrame.setLocationRelativeTo(null);
 		quizFrame.setVisible(true);
 	}
