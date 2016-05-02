@@ -103,26 +103,11 @@ public class LoginFrame extends JFrame implements ActionListener{
 		if(source == buttonLogin){
 			Controller.loginIn(textFieldUsername.getText().trim(), passwordField.getPassword());
 		} else if(source == buttonCancel){
-			disposeLoginFrame();
+			Controller.disposeLoginFrame(this);
 		} else if(source == menuItemAbout){
 			Controller.showAboutDialog();
 		} else if(source == menuItemReadMe){
 			Controller.showLogInReadMeDialog();
 		}
-	}
-	
-	/**
-	 * Method which displays confirmation dialog,
-	 * whether users wants to quit application before loging in or not.
-	 */
-	private void disposeLoginFrame() {
-		int option = JOptionPane.showConfirmDialog(
-				null,
-				"Quit application?",
-				"Quiting",
-				JOptionPane.YES_NO_OPTION);
-		
-		if(option == JOptionPane.YES_OPTION)
-			this.dispose();
 	}
 }

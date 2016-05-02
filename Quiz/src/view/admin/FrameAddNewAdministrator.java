@@ -28,6 +28,8 @@ public class FrameAddNewAdministrator extends JFrame implements ActionListener{
 	
 	public static final int DEFAULT_WIDTH = 300;
 	public static final int DEFAULT_HEIGHT = 250;
+	
+	private static FrameAddNewAdministrator instance;
 
 	private JPanel panelFirstName;
 	private JPanel panelLastName;
@@ -49,7 +51,21 @@ public class FrameAddNewAdministrator extends JFrame implements ActionListener{
 	private JTextField tfPassword;
 	private JTextField tfLastName;
 	
-	public FrameAddNewAdministrator(){
+	/**
+	 * getInstance() method, idea from Singleton pattern
+	 * @return {@link FrameAddNewAdministrator}
+	 */
+	public static FrameAddNewAdministrator getInstance(){
+		if(instance == null){
+			instance = new FrameAddNewAdministrator();
+		}
+		return instance;
+	}
+	
+	/**
+	 * Private empty constructor
+	 */
+	private FrameAddNewAdministrator(){
 		setTitle("Add new administrator...");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setLayout(new GridLayout(4, 1));
@@ -124,35 +140,36 @@ public class FrameAddNewAdministrator extends JFrame implements ActionListener{
 		
 		if(source == buttonAdd){
 			Controller.addNewAdministrator(tfFirstName.getText(), tfLastName.getText(), tfPassword.getText());
-			refreshFields();
+			Controller.refreshFieldsFrameAddNewAdministrator();
 		}else if(source == buttonCancel){
-			disposeFrameAddNewAdministrator();
+			Controller.disposeFrame(this);
+			// disposeFrameAddNewAdministrator();
 		}else if(source == itemHelp){
 			Controller.showAddNewAdministratorFrameHelpDialog();
 		}
 	}
-
+	
 	/**
-	 * Confirm dialog which asks Administrator 
-	 * whether he is sure that he wants to dispose/quit this dialog
+	 * Get method for tfFirstName attribute
+	 * @return tfFirstName
 	 */
-	private void disposeFrameAddNewAdministrator() {
-		int option = JOptionPane.showConfirmDialog(
-				null, 
-				"Close this window?", 
-				"Exit", 
-				JOptionPane.YES_NO_OPTION);
-		
-		if(option == JOptionPane.YES_OPTION)
-			this.dispose();
+	public JTextField getTfFirstName() {
+		return tfFirstName;
 	}
-
+	
 	/**
-	 * Method which removes content of all text filds in the frame
+	 * Get method for tfLastName attribute
+	 * @return tfLastName
 	 */
-	private void refreshFields() {
-		tfFirstName.setText(null);
-		tfPassword.setText(null);
-		tfLastName.setText(null);
+	public JTextField getTfLastName() {
+		return tfLastName;
+	}
+	
+	/**
+	 * Get method for tfPassword attribute
+	 * @return tfPassword
+	 */
+	public JTextField getTfPassword() {
+		return tfPassword;
 	}
 }

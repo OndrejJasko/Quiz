@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 import controller.Controller;
 import domain.Answer;
@@ -26,6 +27,8 @@ import domain.Answer;
 public class QuestionFrame extends JFrame implements ActionListener {
 	public static final int DEFAULT_WIDTH = 400;
 	public static final int DEFAULT_HEIGHT = 700;
+	
+	private static QuestionFrame instance;
 	
 	private JButton buttonClose;
 	private JButton buttonAdd;
@@ -62,10 +65,22 @@ public class QuestionFrame extends JFrame implements ActionListener {
 	private JMenu menuHelpREADME;
 	private JMenuItem itemReadMe;
 	
-	/*
-	 * public empty constructor
+	/**
+	 * Global point of access for QuestionFrame instance
+	 * 
+	 * @return instance, {@link QuestionFrame}
 	 */
-	public QuestionFrame() {
+	public static QuestionFrame getInstance(){
+		if(instance == null){
+			instance = new QuestionFrame();
+		}
+		return instance;
+	}
+	
+	/** 
+	 * Making the constructor private so that this class cannot be instantiated
+	 */
+	private QuestionFrame() {
 		setTitle("Add new question");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setLayout(new BorderLayout());
@@ -241,92 +256,84 @@ public class QuestionFrame extends JFrame implements ActionListener {
 		Object source = e.getSource();
 		
 		if(source == buttonClose){
-			disposeQuestionFrame();
+			Controller.disposeFrame(this);
 		} else if(source == buttonAdd){
-			saveQuestion();
+			Controller.saveQuestion();
+			Controller.refreshFieldsQuestionFrame();
 		} else if(source == itemReadMe){
-			showReadMeDialog();
+			Controller.showReadMeDialogQuestionFrame(this);
 		}
 	}
-
+	
 	/**
-	 * Message dilalog which informs Administrator about actions he can perform on current frame
+	 * Get method for private attribute taAnswer1
+	 * @return taAnswer1, {@link TextArea}
 	 */
-	private void showReadMeDialog() {
-		JOptionPane.showMessageDialog(
-				null,
-			    "Add  - Creates new question, based on content of text areas and jradiobuttons\n"
-			    + "\tand adds newly created question to global list of questions.\n"
-			    + "Question panel - Add question text to textArea surrounded with border titled 'Question'\n"
-			    + "Answer panels - Add answer text to textAreas surrounded with border titled 'Answer #'\n"
-			    + "\tIf answer# is correct, select appropriate jradiobutton\n");
+	public JTextArea getTaAnswer1() {
+		return taAnswer1;
 	}
-
+	
 	/**
-	 * Method that saves question to global list of questions
+	 * Get method for private attribute taAnswer2
+	 * @return taAnswer2, {@link TextArea}
 	 */
-	private void saveQuestion() {
-		Answer a1 = getAnswer(taAnswer1, rb1);
-		Answer a2 = getAnswer(taAnswer2, rb2);
-		Answer a3 = getAnswer(taAnswer3, rb3);
-		Answer a4 = getAnswer(taAnswer4, rb4);
-		
-		String questionText = textAreaQuestion.getText().trim();
-		
-		Controller.addNewQuestion(questionText, a1, a2, a3, a4);
-		
-		refreshFields();
+	public JTextArea getTaAnswer2() {
+		return taAnswer2;
 	}
-
+	
 	/**
-	 * Confirm dialog which asks Administrator 
-	 * whether he is sure that he wants to dispose/quit this dialog
+	 * Get method for private attribute taAnswer3
+	 * @return taAnswer3, {@link TextArea}
 	 */
-	private void disposeQuestionFrame() {
-		int option = JOptionPane.showConfirmDialog(
-				null,
-				"Leave Question frame?",
-				"Exit",
-				JOptionPane.YES_NO_OPTION);
-		
-		if(option == JOptionPane.YES_OPTION)
-			this.dispose();
+	public JTextArea getTaAnswer3() {
+		return taAnswer3;
 	}
-
+	
 	/**
-	 * Methods which removes contents of all text areas in the frame
+	 * Get method for private attribute taAnswer4
+	 * @return taAnswer4, {@link TextArea}
 	 */
-	private void refreshFields() {
-		textAreaQuestion.setText(null);
-		taAnswer1.setText(null);
-		taAnswer2.setText(null);
-		taAnswer3.setText(null);
-		taAnswer4.setText(null);
+	public JTextArea getTaAnswer4() {
+		return taAnswer4;
 	}
-
+	
 	/**
-	 * Method which generates Answer
-	 * based on contents of the appropriate text area
-	 * and appropriate radio button
-	 * 
-	 * @param textArea, text area from which Answer text is read
-	 * 
-	 * @param rb, radio button representing whether Answer is correct or not
-	 * 
-	 *  @return Answer, returns answer based on content of the input parameters
+	 * Get method for private attribute rb1
+	 * @return rb1, {@link JRadioButton}
 	 */
-	private Answer getAnswer(JTextArea textArea, JRadioButton rb) {
-		
-		try{
-			String answerText = textArea.getText().trim();
-			boolean isCorrect = rb.isSelected();
-			
-			return new Answer(answerText, isCorrect);
-			
-		}catch(Exception exc){
-			Controller.showExceptionErrorPane(exc);
-		}
-		
-		return null;
+	public JRadioButton getRb1() {
+		return rb1;
+	}
+	
+	/**
+	 * Get method for private attribute rb2
+	 * @return rb2, {@link JRadioButton}
+	 */
+	public JRadioButton getRb2() {
+		return rb2;
+	}
+	
+	/**
+	 * Get method for private attribute rb3
+	 * @return rb3, {@link JRadioButton}
+	 */
+	public JRadioButton getRb3() {
+		return rb3;
+	}
+	
+	/**
+	 * Get method for private attribute rb4
+	 * @return rb4, {@link JRadioButton}
+	 */
+	public JRadioButton getRb4() {
+		return rb4;
+	}
+	
+	/**
+	 * Get method for private attribute textAreaQuestion
+	 * @return textAreaQuestion, {@link TextArea}
+	 */
+	public JTextArea getTextAreaQuestion() {
+		return textAreaQuestion;
 	}
 }

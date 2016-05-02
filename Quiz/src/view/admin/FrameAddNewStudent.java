@@ -20,6 +20,8 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 	public static final int DEFAULT_WIDTH = 300;
 	public static final int DEFAULT_HEIGHT = 250;
 	
+	private static FrameAddNewStudent instance;
+	
 	private JPanel panelIndex;
 	private JPanel panelEnrollmentYear;
 	private JPanel panelFirstName;
@@ -43,7 +45,20 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
 	
-	public FrameAddNewStudent(){
+	/**
+	 * Global point of access for FrameAddNewStudent instance
+	 * @return instance, {@link FrameAddNewStudent}
+	 */
+	public static FrameAddNewStudent getInstance(){
+		if(instance == null){
+			instance = new FrameAddNewStudent();
+		}
+		return instance;
+	}
+	/**
+	 * Making the constructor private so that this class cannot be instantiated
+	 */
+	private FrameAddNewStudent(){
 		setTitle("Add new student...");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setLayout(new GridLayout(5, 1));
@@ -128,36 +143,43 @@ public class FrameAddNewStudent extends JFrame implements ActionListener{
 		
 		if(source == buttonAdd){
 			Controller.addNewStudent(tfIndex.getText(), tfEnrollmentYear.getText(), tfFirstName.getText(), tfLastName.getText());
-			refreshFields();
+			Controller.refreshFieldsFrameAddNewStudent();
 		}else if(source == buttonCancel){
-			disposeFrameAddNewStudent();
+			Controller.disposeFrame(this);
 		}else if(source == itemHelp){
 			Controller.showAddNewStudentFrameHelpDialog();
 		}
 	}
-
+	
 	/**
-	 * Confirm dialog which asks Administrator 
-	 * whether he is sure that he wants to dispose/quit this dialog
+	 * Get method for private attribute tfIndex
+	 * @return tfIndex, {@link TextField}
 	 */
-	private void disposeFrameAddNewStudent() {
-		int option = JOptionPane.showConfirmDialog(
-				null, 
-				"Close this window?", 
-				"Exit", 
-				JOptionPane.YES_NO_OPTION);
-		
-		if(option == JOptionPane.YES_OPTION)
-			this.dispose();
+	public JTextField getTfIndex() {
+		return tfIndex;
 	}
-
+	
 	/**
-	 * Method which removes content of all text filds in the frame
+	 * Get method for private attribute tfEnrollmentYear
+	 * @return tfEnrollmentYear, {@link TextField}
 	 */
-	private void refreshFields() {
-		tfIndex.setText(null);
-		tfEnrollmentYear.setText(null);
-		tfFirstName.setText(null);
-		tfLastName.setText(null);
+	public JTextField getTfEnrollmentYear() {
+		return tfEnrollmentYear;
+	}
+	
+	/**
+	 * Get method for private attribute tfFirstName
+	 * @return tfFirstName, {@link TextField}
+	 */
+	public JTextField getTfFirstName() {
+		return tfFirstName;
+	}
+	
+	/**
+	 * Get method for private attribute tfLastName
+	 * @return tfLastName, {@link TextField}
+	 */
+	public JTextField getTfLastName() {
+		return tfLastName;
 	}
 }

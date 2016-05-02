@@ -73,21 +73,7 @@ public class FrameCheckResults extends JFrame implements ActionListener{
 		Object source = e.getSource();
 		
 		if(source == buttonOK){
-			closeWindow();
+			 Controller.disposeFrame(this);
 		}
-	}
-
-	/**
-	 * Confirm dialog which asks Administrator 
-	 * whether he is sure that he wants to dispose/quit this dialog
-	 */
-	private void closeWindow() {
-		int option = JOptionPane.showConfirmDialog(
-				null, 
-				"Close this window?", 
-				"Exit", 
-				JOptionPane.YES_NO_OPTION);
-		if(option == JOptionPane.YES_OPTION)
-			this.dispose();
 	}
 }

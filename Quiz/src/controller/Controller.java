@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 
 import com.mysql.jdbc.integration.c3p0.MysqlConnectionTester;
 
@@ -16,6 +18,7 @@ import domain.Question;
 import domain.Student;
 import model.CollectionOfQuestions;
 import model.CollectionOfStudents;
+import view.LoginFrame;
 import view.admin.FrameAddNewAdministrator;
 import view.admin.FrameAddNewStudent;
 import view.admin.FrameAdministrator;
@@ -138,7 +141,7 @@ public class Controller {
 	 * to add new student to a student list 
 	 */
 	public static void showAddNewStudentFrame() {
-		FrameAddNewStudent addStudentFrame = new FrameAddNewStudent();
+		FrameAddNewStudent addStudentFrame = FrameAddNewStudent.getInstance();
 		addStudentFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		addStudentFrame.setLocationRelativeTo(null);
 		addStudentFrame.setVisible(true);
@@ -161,6 +164,13 @@ public class Controller {
 	 */
 	public static void appendTextToAministratorsFrameTextArea(String message){
 		FrameAdministrator.textArea.append(message + "\n");
+	}
+	
+	/**
+	 * Method for removing any text from Administrator's frame text area
+	 */
+	public static void ClearAministratorsFrameTextArea(){
+		FrameAdministrator.textArea.setText(null);
 	}
 
 	/**
@@ -191,7 +201,7 @@ public class Controller {
 	 * Method displaying frame which allows Administrator to add new Question.
 	 */
 	public static void showAddNewQuestionFrame() {
-		QuestionFrame qframe = new QuestionFrame();
+		QuestionFrame qframe = QuestionFrame.getInstance();
 		qframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		qframe.setVisible(true);
 		qframe.setLocationRelativeTo(null);
@@ -293,6 +303,10 @@ public class Controller {
 		CollectionOfStudents instance = CollectionOfStudents.getInstance();
 		
 		dao.saveStudentsToDatabase(instance.getListOfStudents());
+		
+		instance.getListOfStudents().clear();
+		
+		Controller.ClearAministratorsFrameTextArea();
 	}
 
 	/**
@@ -323,6 +337,8 @@ public class Controller {
 		CollectionOfQuestions instance = CollectionOfQuestions.getInstance();
 		
 		dao.saveQuestionsToDatabase(instance.getAllQuestions());
+		
+		instance.getAllQuestions().clear();
 	}
 
 	/**
@@ -436,9 +452,159 @@ public class Controller {
 	 * frame from which Administrator can create new Administrator
 	 */
 	public static void showAddNewAdministratorFrame() {
-		FrameAddNewAdministrator newAdminFrame = new FrameAddNewAdministrator();
+		FrameAddNewAdministrator newAdminFrame = FrameAddNewAdministrator.getInstance();
 		newAdminFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		newAdminFrame.setVisible(true);
 		newAdminFrame.setLocationRelativeTo(null);
+	}
+
+	/**
+	 * Confirm dialog which asks Administrator 
+	 * whether he is sure that he wants to dispose/quit dialog
+	 * 
+	 * @param frame, frame that is closing
+	 */
+	public static void disposeFrame(JFrame frame) {
+		int option = JOptionPane.showConfirmDialog(
+				frame,
+				"Are you sure you want to close/dispose this window?",
+				"Closing/Disposing",
+				JOptionPane.YES_NO_OPTION);
+		
+		if(option == JOptionPane.YES_OPTION)
+			frame.dispose();
+	}
+
+	/**
+	 * Message dilalog which informs Administrator about actions he can perform
+	 */
+	public static void showReadMeDialogFrameAdministrator() {
+		JOptionPane.showMessageDialog(
+				null,
+			    "Add student - Displays frame from which Administrator can add new student\n"
+			    + "Add question - Displays frame from which Administrator can add new question\n"
+			    + "Check results - Displays frame which displays scores of all students\n"
+			    + "Save students - Saves recently added students to database\n"
+			    + "Save question - Saves recently added questions to database\n"
+			    + "LogOut/Cancel - User logs out, disposes Aministrator frame\n");
+	}
+
+	/**
+	 * Method which removes content of all text filds in frame FrameAddNewAdministrator
+	 */
+	public static void refreshFieldsFrameAddNewAdministrator() {
+		FrameAddNewAdministrator instance = FrameAddNewAdministrator.getInstance();
+		instance.getTfFirstName().setText(null);
+		instance.getTfLastName().setText(null);
+		instance.getTfPassword().setText(null);
+	}
+
+	/**
+	 * Method which displays confirmation dialog,
+	 * whether users wants to quit application before loging in or not.
+	 */
+	public static void disposeLoginFrame(LoginFrame loginFrame) {
+		int option = JOptionPane.showConfirmDialog(
+				loginFrame,
+				"Quit application?",
+				"Quiting",
+				JOptionPane.YES_NO_OPTION);
+		
+		if(option == JOptionPane.YES_OPTION)
+			loginFrame.dispose();
+	}
+
+	/**
+	 * Confirm dialog which asks Administrator 
+	 * whether he is sure that he wants to log out from current account
+	 * 
+	 * @param frameAdministrator, frame that is closing
+	 */
+	public static void disposeAdministratorFrame(FrameAdministrator frameAdministrator) {
+		int option = JOptionPane.showConfirmDialog(
+				frameAdministrator,
+				"Are you sure you want to log out?",
+				"LOG OUT",
+				JOptionPane.YES_NO_OPTION);
+		
+		if(option == JOptionPane.YES_OPTION)
+			frameAdministrator.dispose();
+	}
+
+	/**
+	 * Method which removes content of all text filds
+	 * in frame FrameAddNewStudent
+	 */
+	public static void refreshFieldsFrameAddNewStudent() {
+		FrameAddNewStudent instance = FrameAddNewStudent.getInstance();
+		instance.getTfIndex().setText(null);
+		instance.getTfEnrollmentYear().setText(null);
+		instance.getTfFirstName().setText(null);
+		instance.getTfLastName().setText(null);
+	}
+
+	/**
+	 * Message dilalog which informs Administrator about actions he can perform on current frame
+	 */
+	public static void showReadMeDialogQuestionFrame(QuestionFrame qFrame) {
+			JOptionPane.showMessageDialog(
+					qFrame,
+				    "Add  - Creates new question, based on content of text areas and jradiobuttons\n"
+				    + "\tand adds newly created question to global list of questions.\n"
+				    + "Question panel - Add question text to textArea surrounded with border titled 'Question'\n"
+				    + "Answer panels - Add answer text to textAreas surrounded with border titled 'Answer #'\n"
+				    + "\tIf answer# is correct, select appropriate jradiobutton\n");
+	}
+
+	/**
+	 * Method which removes content of all text areas in the frame.
+	 */
+	public static void refreshFieldsQuestionFrame() {
+		QuestionFrame instance = QuestionFrame.getInstance();
+		instance.getTextAreaQuestion().setText(null);
+		instance.getTaAnswer1().setText(null);
+		instance.getTaAnswer2().setText(null);
+		instance.getTaAnswer3().setText(null);
+		instance.getTaAnswer4().setText(null);
+		instance.getRb1().setSelected(true);
+	}
+
+	/**
+	 * Method which generates Answer
+	 * based on contents of the appropriate text area
+	 * and appropriate radio button
+	 * 
+	 * @param textArea, text area from which Answer text is read
+	 * 
+	 * @param radioButton, radio button showing whether Answer is correct or not
+	 * 
+	 *  @return Answer, returns answer based on content of the input parameters
+	 */
+	public static Answer getAnswer(JTextArea textArea, JRadioButton radioButton) {
+		try{
+			String answerText = textArea.getText().trim();
+			boolean isCorrect = radioButton.isSelected();
+			
+			return new Answer(answerText, isCorrect);
+			
+		}catch(Exception exc){
+			Controller.showExceptionErrorPane(exc);
+		}
+		return null;
+	}
+
+	/**
+	 * Method that saves question to global list of questions
+	 */
+	public static void saveQuestion() {
+		QuestionFrame instance = QuestionFrame.getInstance();
+		Answer a1 = Controller.getAnswer(instance.getTaAnswer1(), instance.getRb1());
+		Answer a2 = Controller.getAnswer(instance.getTaAnswer2(), instance.getRb2());
+		Answer a3 = Controller.getAnswer(instance.getTaAnswer3(), instance.getRb3());
+		Answer a4 = Controller.getAnswer(instance.getTaAnswer4(), instance.getRb4());
+		
+		String questionText = instance.getTextAreaQuestion().getText().trim();
+		
+		Controller.addNewQuestion(questionText, a1, a2, a3, a4);
 	}
 }

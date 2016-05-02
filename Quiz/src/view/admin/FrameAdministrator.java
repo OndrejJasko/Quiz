@@ -21,7 +21,7 @@ import controller.Controller;
  */
 public class FrameAdministrator extends JFrame implements ActionListener{
 	
-	public static final int DEFAULT_WIDTH = 465;
+	public static final int DEFAULT_WIDTH = 475;
 	public static final int DEFAULT_HEIGHT = 400;
 	
 	private JMenuBar menuBar;
@@ -51,6 +51,10 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 	private JPanel panelEast;
 	private JPanel panelCenter;
 	
+	/**
+	 * Contructor
+	 * @param firstName, aministrator's first name
+	 */
 	public FrameAdministrator(String firstName){
 		
 		setTitle("Hello " + firstName + "! Choose what you are going to do next :)");
@@ -121,6 +125,9 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		panelEast = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panelEast.setPreferredSize(new Dimension(150, 400));
 		
+		/*
+		 * Defining buttons
+		 */
 		buttonAddStudent = new JButton("Add student");
 		buttonAddQuestion = new JButton("Add question");
 		buttonCheckResults = new JButton("Check results");
@@ -129,6 +136,9 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		buttonAddNewAdmin = new JButton("Add admin");
 		buttonLogOut = new JButton("LogOut/Cancel");
 		
+		/*
+		 * Defining action listeners for buttons
+		 */
 		buttonAddStudent.addActionListener(this);
 		buttonAddQuestion.addActionListener(this);
 		buttonCheckResults.addActionListener(this);
@@ -137,6 +147,9 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		buttonAddNewAdmin.addActionListener(this);
 		buttonLogOut.addActionListener(this);
 		
+		/*
+		 * Adding buttons to east panel
+		 */
 		panelEast.add(buttonAddStudent);
 		panelEast.add(buttonAddQuestion);
 		panelEast.add(buttonCheckResults);
@@ -145,6 +158,9 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		panelEast.add(buttonAddNewAdmin);
 		panelEast.add(buttonLogOut);
 		
+		/*
+		 * Adding panels to container(panel)
+		 */
 		add(panelCenter, BorderLayout.CENTER);
 		add(panelEast, BorderLayout.EAST);
 	}
@@ -163,44 +179,17 @@ public class FrameAdministrator extends JFrame implements ActionListener{
 		} else if(source == itemCheckResults || source == buttonCheckResults){
 			Controller.showResultsFrame();
 		} else if(source == itemLogOut || source == buttonLogOut){
-			disposeAdministratorFrame();
+			Controller.disposeAdministratorFrame(this);
+			//disposeAdministratorFrame();
 		} else if(source == itemSaveStudents || source == buttonSaveStudentsToDB){
 			Controller.saveStudentsToDB();
 		} else if(source == itemSaveQuestions || source == buttonSaveQuestionsToDB){
 			Controller.saveQuestionsToDB();
 		} else if(source == itemHelp){
-			showReadMeDialog();
+			Controller.showReadMeDialogFrameAdministrator();
+			// showReadMeDialog();
 		} else if(source == itemAddNewAdmin || source == buttonAddNewAdmin){
 			Controller.showAddNewAdministratorFrame();
 		}
-	}
-
-	/**
-	 * Confirm dialog which asks Administrator 
-	 * whether he is sure that he wants to dispose/quit this dialog
-	 */
-	private void disposeAdministratorFrame() {
-		int option = JOptionPane.showConfirmDialog(
-				null,
-				"Are you sure you want to log out?",
-				"LogOUT",
-				JOptionPane.YES_NO_OPTION);
-		
-		if(option == JOptionPane.YES_OPTION)
-			this.dispose();
-	}
-
-	/**
-	 * Message dilalog which informs Administrator about actions he can perform
-	 */
-	private void showReadMeDialog() {
-		JOptionPane.showMessageDialog(
-				null,
-			    "Add student - Displays frame from which Administrator can add new student\n"
-			    + "Add question - Displays frame from which Administrator can add new question\n"
-			    + "Check results - Displays frame which displays scores of all students\n"
-			    + "Save students - Saves recently added students to database\n"
-			    + "Save question - Saves recently added questions to database\n"
-			    + "LogOut/Cancel - User logs out, disposes Aministrator frame\n");
 	}
 }
