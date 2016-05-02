@@ -23,7 +23,7 @@ import domain.Student;
  * @author Filip Stojkovic
  * @author Martin Veres
  */
-public class QuizFrame extends JFrame implements ActionListener, WindowListener {
+public class QuizFrame extends JFrame implements ActionListener {
 	
 	private static final int DEFAULT_WIDTH = 800;
 	private static final int DEFAULT_HEIGHT = 300;
@@ -280,40 +280,5 @@ public class QuizFrame extends JFrame implements ActionListener, WindowListener 
 	 */
 	public List<Question> getQuestions() {
 		return questions;
-	}
-
-	@Override
-	public void windowActivated(WindowEvent arg0) {
-	}
-
-	@Override
-	public void windowClosed(WindowEvent arg0) {
-		JOptionPane.showMessageDialog(null, 
-				"Finishing exam", 
-				"Info", 
-				JOptionPane.INFORMATION_MESSAGE);
-		QuizFrame.getInstance().restart();
-	}
-
-	@Override
-	public void windowClosing(WindowEvent arg0) {
-		
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent arg0) {
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent arg0) {
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent arg0) {
-	}
-
-	@Override
-	public void windowOpened(WindowEvent arg0) {
 	}
 }

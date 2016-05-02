@@ -45,6 +45,7 @@ public class LoginFrame extends JFrame implements ActionListener{
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setTitle("USER LOG IN");
 		setLayout(new GridLayout(3, 1));
+		setResizable(false);
 		
 		menuBar = new JMenuBar();
 		menuHelp = new JMenu("Help");

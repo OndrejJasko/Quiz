@@ -3,6 +3,7 @@ package controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -727,7 +728,7 @@ public class Controller {
 	public static void initializeQuestions() {
 		QuizFrame instance = QuizFrame.getInstance();
 		
-		List<Question> tmp = new ArrayList<>();
+		List<Question> tmp = new LinkedList<>();
 		
 		instance.getQuestions().clear();
 		tmp.clear();
