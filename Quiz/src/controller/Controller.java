@@ -35,6 +35,23 @@ import view.student.QuizFrame;
  */
 public class Controller {
 	
+	private static Student activeStudent;
+	/**
+	 * Get method for private attribute activeStudent
+	 * @return activeStudent, {@link Student},
+	 * 						  represents student who is currently using application
+	 */
+	public static Student getActiveStudent() {
+		return activeStudent;
+	}
+	/**
+	 * Set method for private attribute activeStudent
+	 * @param activeStudent, represents student who is currently using application
+	 */
+	public static void setActiveStudent(Student activeStudent) {
+		Controller.activeStudent = activeStudent;
+	}
+	
 	/**
 	 * Method which performs login operation
 	 * 
@@ -92,7 +109,8 @@ public class Controller {
 			try{
 				Student student = new Student(indexNumber, enrollmentYear, firstName, lastName, password, 0 );
 				if(dao.isStudent(student)){
-					Controller.showQuizFrame(student);
+					Controller.setActiveStudent(student);
+					Controller.showQuizFrame(getActiveStudent());
 				}else{
 					errorInSigningIn();
 				}
@@ -130,7 +148,7 @@ public class Controller {
 	 * QuizForm is displayed to Student
 	 */
 	private static void showQuizFrame(Student student) {
-		QuizFrame quizFrame = QuizFrame.getInstance(student);
+		QuizFrame quizFrame = QuizFrame.getInstance();
 		quizFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		quizFrame.setLocationRelativeTo(null);
 		quizFrame.setVisible(true);
@@ -606,5 +624,92 @@ public class Controller {
 		String questionText = instance.getTextAreaQuestion().getText().trim();
 		
 		Controller.addNewQuestion(questionText, a1, a2, a3, a4);
+	}
+
+	/**
+	 * Method checking whether selected answer is correnct or not
+	 * 
+	 * @return boolean, returns true if answer is correct and false if it is not
+	 */
+	public static boolean isCorrectlyAnswered() {
+		QuizFrame instance = QuizFrame.getInstance();
+		
+		if(instance.getRba1().isSelected() && instance.getQuestions().get(0).getAnswers().get(0).isCorrect()){
+			return true;
+		} else if(instance.getRba2().isSelected() && instance.getQuestions().get(0).getAnswers().get(1).isCorrect()){
+			return true;
+		} else if(instance.getRba3().isSelected() && instance.getQuestions().get(0).getAnswers().get(2).isCorrect()){
+			return true;
+		} else if(instance.getRba4().isSelected() && instance.getQuestions().get(0).getAnswers().get(3).isCorrect()){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * If students has answered to a question, application moves on to the next question.
+	 * If there are any questions left, student continues to answer.
+	 * If there are no questions left, student cannot use this application any more.
+	 */
+	public static void getNextQuestion() {
+		QuizFrame instance = QuizFrame.getInstance();
+		
+		if(instance.getQuestions().size() > 1){
+			instance.getQuestions().remove(0);
+			
+			instance.getLabelQuestionContent().setText(instance.getQuestions().get(0).getDescription());
+			instance.getRba1().setText(instance.getQuestions().get(0).getAnswers().get(0).getAnswerText());
+			instance.getRba2().setText(instance.getQuestions().get(0).getAnswers().get(1).getAnswerText());
+			instance.getRba3().setText(instance.getQuestions().get(0).getAnswers().get(2).getAnswerText());
+			instance.getRba4().setText(instance.getQuestions().get(0).getAnswers().get(3).getAnswerText());
+			
+			instance.getLabelScore().setText(getActiveStudent().getFirstName().toUpperCase() + "'s score: " + getActiveStudent().getResult());
+		}
+		else{
+			Controller.updateResultOfStudentToDB(getActiveStudent());
+			JOptionPane.showMessageDialog(
+					null,
+					"Exam is over!\n" +
+					"You have scored: " + 
+					Controller.getActiveStudent().getResult() + " points");
+			Controller.endOfExam();
+		}
+	}
+	
+	/**
+	 * If student has answered to all questions (5 questions),
+	 * he cannot use this application any more.
+	 */
+	public static void endOfExam() {
+		QuizFrame instance = QuizFrame.getInstance();
+		
+		instance.getButtonConfirm().setEnabled(false);
+		instance.getRba1().setEnabled(false);
+		instance.getRba2().setEnabled(false);
+		instance.getRba3().setEnabled(false);
+		instance.getRba4().setEnabled(false);
+		instance.getLabelScore().setText(getActiveStudent().getFirstName().toUpperCase() + "'s score: " + getActiveStudent().getResult());
+		instance.getLabelQuestionContent().setText("The End...");
+		instance.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	}
+	
+	/**
+	 * After selecting answer student presses button.
+	 * If selected answer is correct, 
+	 * student's result is increased and application moves on to next question.
+	 * If selected answer is incorrect,
+	 * student's result is decreased and app moves on to next question
+	 */
+	public static void ButtonConfirmPerformAction() {
+		boolean correct = Controller.isCorrectlyAnswered();
+		
+		if(correct){
+			getActiveStudent().increaseResult();
+			Controller.getNextQuestion();
+		} else{
+			getActiveStudent().decreaseResult();
+			Controller.getNextQuestion();
+		}
 	}
 }

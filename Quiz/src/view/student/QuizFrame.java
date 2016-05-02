@@ -63,10 +63,10 @@ public class QuizFrame extends JFrame implements ActionListener{
 	 * @param student, user who has logged in, in order to take an exam
 	 * @return QuizFrame instance
 	 */
-	public static QuizFrame getInstance(Student student){
+	public static QuizFrame getInstance(){
 		if(instance == null){
 			Controller.loadQuestionsFromDB();
-			instance = new QuizFrame(student);
+			instance = new QuizFrame();
 			instance.initialize();
 		}
 		
@@ -79,10 +79,10 @@ public class QuizFrame extends JFrame implements ActionListener{
 	 * 
 	 * @param student, student who is taking exam, playing quiz
 	 */
-	private QuizFrame(Student student){
+	private QuizFrame(){
 		setTitle("RED STAR BELGRADE!!!");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		this.student = student;
+		this.student = Controller.getActiveStudent();
 	}
 	
 	private void initialize() {
@@ -218,49 +218,6 @@ public class QuizFrame extends JFrame implements ActionListener{
 		// setResizable(false);
 		pack();
 	}
-	
-	/**
-	 * If students has answered to a question, application moves on to the next question.
-	 * If there are any questions left, student continues to answer.
-	 * If there are no questions left, student cannot use this application any more.
-	 */
-	public void nextQuestion(){
-		if(questions.size() > 1){
-			questions.remove(0);
-			
-			labelQuestionContent.setText(questions.get(0).getDescription());
-			rba1.setText(questions.get(0).getAnswers().get(0).getAnswerText());
-			rba2.setText(questions.get(0).getAnswers().get(1).getAnswerText());
-			rba3.setText(questions.get(0).getAnswers().get(2).getAnswerText());
-			rba4.setText(questions.get(0).getAnswers().get(3).getAnswerText());
-			
-			labelScore.setText(student.getFirstName().toUpperCase() + "'s score: " + student.getResult());
-		}
-		else{
-			Controller.updateResultOfStudentToDB(student);
-			JOptionPane.showMessageDialog(
-					null,
-					"Exam is over!\n" +
-					"You have scored: " + 
-					student.getResult() + " points");
-			endOfExam();
-		}
-	}
-
-	/**
-	 * If student has answered to all questions (5 questions),
-	 * he cannot use this application any more.
-	 */
-	private void endOfExam() {
-		buttonConfirm.setEnabled(false);
-		rba1.setEnabled(false);
-		rba2.setEnabled(false);
-		rba3.setEnabled(false);
-		rba4.setEnabled(false);
-		labelScore.setText(student.getFirstName().toUpperCase() + "'s score: " + student.getResult());
-		labelQuestionContent.setText("The End...");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -271,45 +228,79 @@ public class QuizFrame extends JFrame implements ActionListener{
 		Object source = arg0.getSource();
 		
 		if(source == buttonConfirm){
-			performAction();
+			Controller.ButtonConfirmPerformAction();
 		}
 	}
 
 	/**
-	 * After selecting answer student presses button.
-	 * If selected answer is correct, 
-	 * student's result is increased and application moves on to next question.
-	 * If selected answer is incorrect,
-	 * student's result is decreased and app moves on to next question
+	 * Get method for private attribute getRba1
+	 * @return rba1, {@link JRadioButton}
 	 */
-	private void performAction() {
-		
-		boolean correct = isCorrectlyAnswered();
-		
-		if(correct){
-			student.increaseResult();
-			nextQuestion();
-		} else{
-			student.decreaseResult();
-			nextQuestion();
-		}
+	public JRadioButton getRba1() {
+		return rba1;
+	}
+	
+	/**
+	 * Get method for private attribute getRba2
+	 * @return rba2, {@link JRadioButton}
+	 */
+	public JRadioButton getRba2() {
+		return rba2;
+	}
+	
+	/**
+	 * Get method for private attribute getRba3
+	 * @return rba3, {@link JRadioButton}
+	 */
+	public JRadioButton getRba3() {
+		return rba3;
+	}
+	
+	/**
+	 * Get method for private attribute getRba4
+	 * @return rba4, {@link JRadioButton}
+	 */
+	public JRadioButton getRba4() {
+		return rba4;
+	}
+	
+	/**
+	 * Get method for private attribute labelQuestionContent
+	 * @return labelQuestionContent, {@link JLabel}
+	 */
+	public JLabel getLabelQuestionContent() {
+		return labelQuestionContent;
+	}
+	
+	/**
+	 * Get method for private attribute labelScore
+	 * @return labelScore, {@link JLabel}
+	 */
+	public JLabel getLabelScore() {
+		return labelScore;
+	}
+	
+	/**
+	 * Get method for private attribute buttonConfirm
+	 * @return buttonConfirm, {@link JButton}
+	 */
+	public JButton getButtonConfirm() {
+		return buttonConfirm;
+	}
+	
+	/**
+	 * Get method for private atribute Student
+	 * @return student, {@link Student}
+	 */
+	public Student getStudent() {
+		return student;
 	}
 
 	/**
-	 * Method checking whether selected answer is correnct or not
-	 * 
-	 * @return boolean, returns true if answer is correct and false if it is not
+	 * Get method for private attribute questions
+	 * @return questions
 	 */
-	private boolean isCorrectlyAnswered() {
-		if(rba1.isSelected() && questions.get(0).getAnswers().get(0).isCorrect()){
-			return true;
-		} else if(rba2.isSelected() && questions.get(0).getAnswers().get(1).isCorrect()){
-			return true;
-		} else if(rba3.isSelected() && questions.get(0).getAnswers().get(2).isCorrect()){
-			return true;
-		} else if(rba4.isSelected() && questions.get(0).getAnswers().get(3).isCorrect()){
-			return true;
-		}
-		return false;
+	public List<Question> getQuestions() {
+		return questions;
 	}
 }
